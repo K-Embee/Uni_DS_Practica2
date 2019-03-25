@@ -1,7 +1,6 @@
 package DSP2;
 
 public class GestorFiltros {
-	private SimulacionCoche coche;
 	private CadenaFiltros chain;
 	
 	public GestorFiltros() {
@@ -10,11 +9,7 @@ public class GestorFiltros {
 		chain.addFiltro(new FiltroRozamiento());
 	}
 	
-	public void update(double rpm, EstadoMotor est) {
-		coche.update(chain.update(rpm, est));	
-	}
-	
-	public void setSimulacion(SimulacionCoche s) {
-		coche = s;
+	public double update(double rpm, Object o) {
+		return (chain.update(rpm, o));	
 	}
 }

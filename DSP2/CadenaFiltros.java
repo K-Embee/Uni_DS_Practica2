@@ -8,9 +8,9 @@ public class CadenaFiltros {
 	public void addFiltro(Filtro f) { cadena.add(f); }
 	public void removeFiltro(Filtro f) { cadena.remove(f); }
 	
-	public double update(double rpm, EstadoMotor est) {
+	public double update(double rpm, Object o) {
 		for(Filtro f : cadena){
-			rpm = f.update(rpm, est);
+			rpm = f.update(rpm, o);
 		}
 		return rpm;
 	}
