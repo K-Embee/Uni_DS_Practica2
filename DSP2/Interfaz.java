@@ -17,7 +17,9 @@ public class Interfaz extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	
-	//TODO -- Añadir las tres clases que pertenecen
+	SCAV scav;
+	Mantenimiento mantenimiento;
+	Monitor monitor;
 	
 	private ArrayList<AbstractButton> botones_motor_encendido;
 	private ArrayList<AbstractButton> botones_motor_apagado;
@@ -41,9 +43,13 @@ public class Interfaz extends JFrame implements ActionListener {
 	//Mantenimiento
 	//TODO
 	
-	public Interfaz() {
+	public Interfaz(SCAV s, Mantenimiento ma, Monitor mo) {
 		setTitle("vroom vroom fast machine");
 		setSize(600,400);
+		
+		scav = s;
+		mantenimiento = ma;
+		monitor = mo;
 		
 		//Panel Grande
 		Panel panelGrande = new Panel();
@@ -168,11 +174,5 @@ public class Interfaz extends JFrame implements ActionListener {
 		}
 		
 		establecerEtiquetas();
-	}
-	
-
-	public static void main(String[]args) { //TODO -- Borrar y añadir un controlador en condiciones
-		Interfaz i = new Interfaz();
-		while(true) {}
 	}
 }
