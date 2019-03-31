@@ -30,6 +30,7 @@ public class Coche implements Runnable{
 		filtros = new GestorFiltros();
 		
 		new Thread(this);
+		velocidad_rpm = 0;
 	}
 
 	@Override
@@ -42,8 +43,12 @@ public class Coche implements Runnable{
 			//TODO -- Obtener información del mantenimiento si no se ha arrancado
 			
 			//TODO -- Llamar al gestor de filtros con la velocidad actual y el estado del SCAV
+			filtros.update(velocidad_rpm, state_pedales);
 			
 			//TODO -- Actualizar al monitor con la información relevante
+			monitor.update(velocidad_rpm);
+			
+			mantenimiento.update(velocidad_rpm);
 
 			try {
 				Thread.sleep(Math.round((1000/UPDATES_PER_SECOND)));

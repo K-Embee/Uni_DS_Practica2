@@ -1,15 +1,15 @@
 package DSP2;
 
 public class GestorFiltros {
-	private CadenaFiltros chain;
+	private CadenaFiltros cadena;
 	
 	public GestorFiltros() {
-		chain = new CadenaFiltros();
-		chain.addFiltro(new FiltroVelocidad());
-		chain.addFiltro(new FiltroRozamiento());
+		cadena = new CadenaFiltros();
+		cadena.addFiltro(new FiltroVelocidad());
+		cadena.addFiltro(new FiltroRozamiento());
 	}
 	
-	public double update(double rpm, Object o) {
-		return (chain.update(rpm, o));	
+	public double update(double rpm, EstadoPedales estado) {
+		return (cadena.update(rpm, estado));	
 	}
 }

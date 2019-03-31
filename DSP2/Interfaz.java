@@ -41,6 +41,7 @@ public class Interfaz extends JFrame implements ActionListener {
 	private ButtonGroup grupo_scav;
 	
 	//Mantenimiento
+	//double gasolina = mantenimiento.getGasolina();
 	//TODO
 	
 	public Interfaz(SCAV s, Mantenimiento ma, Monitor mo) {
