@@ -22,7 +22,13 @@ public class SCAV {
 		if(arranque == EstadoArranque.NO_ENCENDIDO) {
 			return false;
 		}
-		return automata.contains(new Pair<EstadoSCAV,EstadoSCAV>(scav, state));
+		if(automata.contains(new Pair<EstadoSCAV,EstadoSCAV>(scav, state))) {
+			scav = state;
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	void setPedales(EstadoPedales state) {
@@ -31,6 +37,10 @@ public class SCAV {
 	
 	void setArranque(EstadoArranque state) {
 		arranque = state;
+	}
+	
+	void pararSCAV() {
+		scav = EstadoSCAV.PARAR;
 	}
 	
 	public EstadoSCAV getSCAV() {
@@ -46,6 +56,7 @@ public class SCAV {
 	}
 	
 	private void inicializarAutomata() {
+		automata = new ArrayList<Pair<EstadoSCAV,EstadoSCAV>>();
 		automata.add(new Pair<EstadoSCAV,EstadoSCAV>(EstadoSCAV.PARAR, EstadoSCAV.ACELERAR));
 		automata.add(new Pair<EstadoSCAV,EstadoSCAV>(EstadoSCAV.PARAR, EstadoSCAV.REINICIAR));
 		automata.add(new Pair<EstadoSCAV,EstadoSCAV>(EstadoSCAV.ACELERAR, EstadoSCAV.MANTENER));

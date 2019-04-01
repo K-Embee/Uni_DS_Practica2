@@ -41,8 +41,10 @@ public class Interfaz extends JFrame implements ActionListener {
 	private ButtonGroup grupo_scav;
 	
 	//Mantenimiento
-	//double gasolina = mantenimiento.getGasolina();
-	//TODO
+	private JButton boton_repostar = null;
+	private JButton boton_aceite = null;
+	private JButton boton_pastillas = null;
+	private JButton boton_revision = null;
 	
 	public Interfaz(SCAV s, Mantenimiento ma, Monitor mo) {
 		setTitle("vroom vroom fast machine");
@@ -81,7 +83,7 @@ public class Interfaz extends JFrame implements ActionListener {
 		boton_accel = new JToggleButton("");
 		boton_decel = new JToggleButton("");
 		
-	    boton_motor.addActionListener( this );
+		boton_motor.addActionListener( this );
 		boton_accel.addActionListener( this );
 		boton_decel.addActionListener( this );
 		
@@ -102,13 +104,31 @@ public class Interfaz extends JFrame implements ActionListener {
 		grupo_scav.add(scav_reiniciar);
 		grupo_scav.add(scav_parar);
 		
+		scav_acelerar.addActionListener( this );
+		scav_mantener.addActionListener( this );
+		scav_reiniciar.addActionListener( this );
+		scav_mantener.addActionListener( this );
+		
 		panelScav.add(scav_acelerar);
 		panelScav.add(scav_mantener);
 		panelScav.add(scav_reiniciar);
 		panelScav.add(scav_parar);
 		
 		//Mantenimiento
-		//TODO
+		boton_repostar = new  JButton("Repostar");
+		boton_aceite = new  JButton("Cambiar aceite");
+		boton_pastillas = new  JButton("Cambiar pastillas");
+		boton_revision = new  JButton("Revisión general");
+		
+		boton_repostar.addActionListener( this );
+		boton_aceite.addActionListener( this );
+		boton_pastillas.addActionListener( this );
+		boton_repostar.addActionListener( this );
+
+		panelMant.add(boton_repostar);
+		panelMant.add(boton_aceite);
+		panelMant.add(boton_pastillas);
+		panelMant.add(boton_revision);
 		
 		//Estetica y funcionalidad
 		botones_motor_encendido = new ArrayList<AbstractButton>();
@@ -119,22 +139,29 @@ public class Interfaz extends JFrame implements ActionListener {
 		botones_motor_encendido.add(boton_accel);
 		botones_motor_encendido.add(boton_decel);
 		
-		//TODO -- Botones de motor apagado
+		botones_motor_apagado = new ArrayList<AbstractButton>();
+		botones_motor_apagado.add(boton_repostar);
+		botones_motor_apagado.add(boton_aceite);
+		botones_motor_apagado.add(boton_pastillas);
+		botones_motor_apagado.add(boton_revision);
 		
-		establecerEtiquetas();
+		etiquetasMotor();
+		etiquetasPedalesSCAV();
 		this.setVisible(true);
 		
 		this.addWindowListener (new WindowAdapter(){public void windowClosing(WindowEvent e){System.exit(0);}});
 	}
 	
-	private void establecerEtiquetas() {
+	private void etiquetasMotor() {
 		if(boton_motor.isSelected()) {
 			boton_motor.setForeground(Color.RED);
 			boton_motor.setText("Parar motor");
 			for(AbstractButton a : botones_motor_encendido) {
 				a.setEnabled(true);
 			}
-			//TODO -- Botones de motor apagado
+			for(AbstractButton a : botones_motor_apagado) {
+				a.setEnabled(false);
+			}
 		}
 		else {
 			boton_motor.setForeground(new Color(0x009900));
@@ -144,8 +171,14 @@ public class Interfaz extends JFrame implements ActionListener {
 			for(AbstractButton a : botones_motor_encendido) {
 				a.setEnabled(false);
 			}
-			//TODO -- Botones de motor apagado
+			for(AbstractButton a : botones_motor_apagado) {
+				a.setEnabled(true);
+			}
 		}
+	}
+	
+	private void etiquetasPedalesSCAV() {
+		//Actualizar botones de pedales
 		if(boton_accel.isSelected()) {
 			boton_accel.setText("Soltar Acelerador");
 		}
@@ -158,22 +191,75 @@ public class Interfaz extends JFrame implements ActionListener {
 		else {
 			boton_decel.setText("Frenar");
 		}
+		
+		//Actualizar botones de SCAV
+		switch(scav.getSCAV()) {
+			case ACELERAR:
+				scav_acelerar.setSelected(true);
+				break;
+			case MANTENER:
+				scav_mantener.setSelected(true);
+				break;
+			case REINICIAR:
+				scav_reiniciar.setSelected(true);
+				break;
+			case PARAR:
+				scav_parar.setSelected(true);
+				break;
+		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		
-		if (event.getSource() == boton_accel) {
-			if(!boton_motor.isSelected() || boton_decel.isSelected()) {
-				boton_accel.setSelected(false);
+		if (event.getSource() == boton_motor) {
+			if(!boton_motor.isSelected()) {
+				scav.setPedales(EstadoPedales.NINGUNO);
+				scav.pararSCAV();
+				scav.setArranque(EstadoArranque.NO_ENCENDIDO);
 			}
+			else {
+				scav.setArranque(EstadoArranque.ENCENDIDO);
+			}
+			etiquetasMotor();
+			return;
 		}
-		if (event.getSource() == boton_decel) {
-			if(!boton_motor.isSelected() || boton_accel.isSelected()) {
-				boton_decel.setSelected(false);
+
+		if(boton_motor.isSelected()) {
+			if (event.getSource() == boton_accel) {
+				if(boton_accel.isSelected()) {
+					scav.setPedales(EstadoPedales.ACELERANDO);
+					boton_decel.setEnabled(false);
+				}
+				else {
+					scav.setPedales(EstadoPedales.NINGUNO);
+					boton_decel.setEnabled(true);
+				}
+			}
+			else if (event.getSource() == boton_decel) {
+				if(boton_decel.isSelected()) {
+					scav.setPedales(EstadoPedales.FRENANDO);
+					boton_accel.setEnabled(false);
+				}
+				else {
+					scav.setPedales(EstadoPedales.NINGUNO);
+					boton_accel.setEnabled(true);
+				}
+			}
+			else if (event.getSource() == scav_acelerar) {
+				scav.setSCAV(EstadoSCAV.ACELERAR);
+			}
+			else if (event.getSource() == scav_parar) {
+				scav.setSCAV(EstadoSCAV.PARAR);
+			}
+			else if (event.getSource() == scav_reiniciar) {
+				scav.setSCAV(EstadoSCAV.REINICIAR);
+			}
+			else if (event.getSource() == scav_mantener) {
+				scav.setSCAV(EstadoSCAV.MANTENER);
 			}
 		}
 		
-		establecerEtiquetas();
+		etiquetasPedalesSCAV();
 	}
 }

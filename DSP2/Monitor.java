@@ -8,6 +8,6 @@ public class Monitor {
 	}
 	
 	double getVelocidad() {
-		return velocidad;
+		return velocidad_rpm;
 	}
 }
