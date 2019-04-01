@@ -9,7 +9,7 @@ public class GestorFiltros {
 		cadena.addFiltro(new FiltroRozamiento());
 	}
 	
-	public double update(double rpm, EstadoPedales estado) {
-		return (cadena.update(rpm, estado));	
+	public double update(double rpm, EstadoPedales pedales, EstadoSCAV scav) {
+		return (cadena.update(rpm, pedales, scav));	
 	}
 }
