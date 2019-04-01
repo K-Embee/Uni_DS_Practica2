@@ -2,6 +2,7 @@ package DSP2;
 
 public class Coche implements Runnable{
 	public static final double UPDATES_PER_SECOND = 60.0;
+	public static final double RADIO_RUEDA = 0.40; //Metros
 	private SCAV scav;
 	private Monitor monitor;
 	private Mantenimiento mantenimiento;
@@ -9,41 +10,24 @@ public class Coche implements Runnable{
 	//General
 	private GestorFiltros filtros;
 	private double velocidad_rpm;
-	private double gasolina = 50.0;
-	private final double max_gasolina = 50.0;
-	
-	//SCAV
-	private EstadoArranque state_arranque;
-	private EstadoPedales state_pedales;
-	private EstadoSCAV state_scav;
-	
-	//Mantenimiento
-	//TODO
-	
-	//Monitor
-	//TODO
 	
 	public Coche(SCAV s, Mantenimiento ma, Monitor mo) {
 		scav = s;
 		mantenimiento = ma;
 		monitor = mo;
 		filtros = new GestorFiltros();
-		
-		new Thread(this);
 		velocidad_rpm = 0;
+		new Thread(this).start();
 	}
 
 	@Override
 	public void run() {
 		while(true) {
-			state_arranque = scav.getArranque();
-			state_pedales = scav.getPedales();
-			state_scav = scav.getSCAV();
 			
 			//TODO -- Obtener información del mantenimiento si no se ha arrancado
 			
 			//TODO -- Llamar al gestor de filtros con la velocidad actual y el estado del SCAV
-			filtros.update(velocidad_rpm, state_pedales);
+			velocidad_rpm = filtros.update(velocidad_rpm, scav.getPedales(), scav.getSCAV());
 			
 			//TODO -- Actualizar al monitor con la información relevante
 			monitor.update(velocidad_rpm);

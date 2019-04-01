@@ -46,6 +46,10 @@ public class Interfaz extends JFrame implements ActionListener {
 	private JButton boton_pastillas = null;
 	private JButton boton_revision = null;
 	
+	//BORRAR DESPUES
+	private JButton aaaa;
+	//FIN
+	
 	public Interfaz(SCAV s, Mantenimiento ma, Monitor mo) {
 		setTitle("vroom vroom fast machine");
 		setSize(600,400);
@@ -107,7 +111,7 @@ public class Interfaz extends JFrame implements ActionListener {
 		scav_acelerar.addActionListener( this );
 		scav_mantener.addActionListener( this );
 		scav_reiniciar.addActionListener( this );
-		scav_mantener.addActionListener( this );
+		scav_parar.addActionListener( this );
 		
 		panelScav.add(scav_acelerar);
 		panelScav.add(scav_mantener);
@@ -129,6 +133,12 @@ public class Interfaz extends JFrame implements ActionListener {
 		panelMant.add(boton_aceite);
 		panelMant.add(boton_pastillas);
 		panelMant.add(boton_revision);
+		
+		//BORRAR DESPUES
+		aaaa = new  JButton("Actualizar velocidad");
+		aaaa.addActionListener( this );
+		panelVelocimetro.add(aaaa);		
+		//FIN
 		
 		//Estetica y funcionalidad
 		botones_motor_encendido = new ArrayList<AbstractButton>();
@@ -211,6 +221,13 @@ public class Interfaz extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
+		
+		//BORRAR DESPUES
+		if(event.getSource() == aaaa) {
+			etiqueta.setText("Velocidad: " + Double.toString(monitor.getVelocidadKm()) + " km/h");
+			return;
+		}
+		//FIN
 		
 		if (event.getSource() == boton_motor) {
 			if(!boton_motor.isSelected()) {
