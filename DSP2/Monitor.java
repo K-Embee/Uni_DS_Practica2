@@ -4,13 +4,19 @@ public class Monitor {
 	double velocidad_rpm;
 	double distancia;
 	double revoluciones;
+	double velocidad_scav;
 	
-	void update(double velocidad_rpm) {
+	void update(double velocidad_rpm, double velocidad_scav) {
 		this.velocidad_rpm = velocidad_rpm;
+		this.velocidad_scav = velocidad_scav;
 	}
 	
 	double getVelocidadRPM() {
 		return velocidad_rpm;
+	}
+	
+	double getVelocidadSCAV() {
+		return velocidad_scav*(Math.PI*Coche.RADIO_RUEDA*2)*60*0.001;
 	}
 	
 	double calcularDistancia() {

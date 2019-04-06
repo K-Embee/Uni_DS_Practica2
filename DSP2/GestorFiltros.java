@@ -10,7 +10,7 @@ public class GestorFiltros {
 		cadena.addFiltro(new FiltroNulo());
 	}
 	
-	public double update(double rpm, EstadoPedales pedales, EstadoSCAV scav) {
-		return (cadena.update(rpm, pedales, scav));	
+	public double update(double rpm, ReguladorPID regulador, EstadoPedales pedales, EstadoSCAV scav) {
+		return (cadena.update(rpm, regulador, pedales, scav));	
 	}
 }

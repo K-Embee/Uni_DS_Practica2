@@ -65,21 +65,21 @@ public class Mantenimiento {
 	}
 	
 	boolean necesitoEngrase() {
-		if( rotaciones_totales - rotaciones_aceite >= 5*Math.pow(10, 6) )
+		if( rotaciones_totales - rotaciones_aceite >= 5*Math.pow(10, 2) ) //6 -> 2 para comprobar
 			return true;
 		else 
 			return false;
 	}
 	
 	boolean necesitoCambioPastillas() {
-		if( rotaciones_totales - rotaciones_pastillas >= Math.pow(10, 8) )
+		if( rotaciones_totales - rotaciones_pastillas >= Math.pow(10, 3) ) //8 -> 3 para comprobar
 			return true;
 		else 
 			return false;
 	}
 	
 	boolean necesitoRevision() {
-		if( rotaciones_totales - rotaciones_revision >= Math.pow(10, 9) )
+		if( rotaciones_totales - rotaciones_revision >= Math.pow(10, 4) ) //9 -> 4 para comprobar
 			return true;
 		else 
 			return false;

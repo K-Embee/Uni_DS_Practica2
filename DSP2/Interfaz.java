@@ -20,6 +20,7 @@ public class Interfaz extends JFrame implements ActionListener, Runnable {
 	private Label etiqueta_velocidad;
 	private Label etiqueta_gasolina;
 	private Label etiqueta_distancia;
+	private Label etiqueta_crucero;
 	
 	//Pedales
 	private JToggleButton boton_accel = null;
@@ -44,7 +45,7 @@ public class Interfaz extends JFrame implements ActionListener, Runnable {
 	private Label alerta_aceite;
 	private Label alerta_pastillas;
 	private Label alerta_revision;
-		
+	
 	public Interfaz(SCAV s, Mantenimiento ma, Monitor mo) {
 		setTitle("vroom vroom fast machine");
 		setSize(750,250);
@@ -99,6 +100,7 @@ public class Interfaz extends JFrame implements ActionListener, Runnable {
 		scav_acelerar 	= new JToggleButton("Acelerar SCAV", false);
 		scav_reiniciar 	= new JToggleButton("Volver a velocidad guardada", false);
 		scav_mantener 	= new JToggleButton("Mantener Velocidad", false);
+		etiqueta_crucero = new Label("Velocidad Guardada: 0.00 km/h");
 		
 		grupo_scav = new ButtonGroup();
 		
@@ -111,6 +113,8 @@ public class Interfaz extends JFrame implements ActionListener, Runnable {
 		scav_mantener.addActionListener( this );
 		scav_reiniciar.addActionListener( this );
 		scav_parar.addActionListener( this );
+		
+		panelDcha.add(etiqueta_crucero);
 		
 		panelScav.add(scav_acelerar);
 		panelScav.add(scav_mantener);
@@ -207,6 +211,7 @@ public class Interfaz extends JFrame implements ActionListener, Runnable {
 		etiqueta_gasolina.setText("Combustible: " + String.format("%.2f", mantenimiento.getGasolina()) + " litros");
 		etiqueta_distancia.setText("Distancia Recorrida:" + String.format("%.2f", mantenimiento.getDistancia()) + " km ("
 				+ String.format("%.2f", mantenimiento.getRotaciones()) + " revoluciones)");
+		etiqueta_crucero.setText("Velocidad guardada: " + String.format("%.2f", monitor.getVelocidadSCAV()) + " km/h");
 		
 		alerta_aceite.setVisible(mantenimiento.necesitoEngrase());
 		alerta_pastillas.setVisible(mantenimiento.necesitoCambioPastillas());
@@ -266,6 +271,8 @@ public class Interfaz extends JFrame implements ActionListener, Runnable {
 			else {
 				scav.setArranque(EstadoArranque.ENCENDIDO);
 			}
+
+			etiquetasMotor();
 		}
 
 		else if(boton_motor.isSelected()) {
@@ -302,8 +309,7 @@ public class Interfaz extends JFrame implements ActionListener, Runnable {
 				scav.setSCAV(EstadoSCAV.MANTENER);
 			}
 		}
-		
-		etiquetasMotor();
+
 		etiquetasPedalesSCAV();
 	}
 }
