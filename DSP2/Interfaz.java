@@ -132,27 +132,27 @@ public class Interfaz extends JFrame implements ActionListener, Runnable {
 		boton_pastillas.addActionListener( this );
 		boton_revision.addActionListener( this );
 		
-		alerta_repostar = new Label("Alerta"); alerta_repostar.setForeground(Color.RED);
-		alerta_aceite = new Label("Alerta"); alerta_aceite.setForeground(Color.RED);
-		alerta_pastillas = new Label("Alerta"); alerta_pastillas.setForeground(Color.RED);
-		alerta_revision = new Label("Alerta"); alerta_revision.setForeground(Color.RED);
+		alerta_repostar = new Label(""); alerta_repostar.setForeground(Color.RED);
+		alerta_aceite = new Label(""); alerta_aceite.setForeground(Color.RED);
+		alerta_pastillas = new Label(""); alerta_pastillas.setForeground(Color.RED);
+		alerta_revision = new Label(""); alerta_revision.setForeground(Color.RED);
 
 		Panel mini;
 		mini = new Panel(new BorderLayout());
-		mini.add(alerta_repostar);
-		mini.add(boton_repostar);
+		mini.add(alerta_repostar, BorderLayout.NORTH);
+		mini.add(boton_repostar, BorderLayout.SOUTH);
 		panelMant.add(mini);
 		mini = new Panel(new BorderLayout());
-		mini.add(alerta_aceite);
-		mini.add(boton_aceite);
+		mini.add(alerta_aceite, BorderLayout.NORTH);
+		mini.add(boton_aceite, BorderLayout.SOUTH);
 		panelMant.add(mini);
 		mini = new Panel(new BorderLayout());
-		mini.add(alerta_pastillas);
-		mini.add(boton_pastillas);
+		mini.add(alerta_pastillas, BorderLayout.NORTH);
+		mini.add(boton_pastillas, BorderLayout.SOUTH);
 		panelMant.add(mini);
 		mini = new Panel(new BorderLayout());
-		mini.add(alerta_revision);
-		mini.add(boton_revision);
+		mini.add(alerta_revision, BorderLayout.NORTH);
+		mini.add(boton_revision, BorderLayout.SOUTH);
 		panelMant.add(mini);
 				
 		//Estetica y funcionalidad
@@ -213,9 +213,9 @@ public class Interfaz extends JFrame implements ActionListener, Runnable {
 				+ String.format("%.2f", mantenimiento.getRotaciones()) + " revoluciones)");
 		etiqueta_crucero.setText("Velocidad guardada: " + String.format("%.2f", monitor.getVelocidadSCAV()) + " km/h");
 		
-		alerta_aceite.setVisible(mantenimiento.necesitoEngrase());
-		alerta_pastillas.setVisible(mantenimiento.necesitoCambioPastillas());
-		alerta_revision.setVisible(mantenimiento.necesitoRevision());
+		alerta_aceite.setText((mantenimiento.necesitoEngrase()) ? "Alerta":"");
+		alerta_pastillas.setText((mantenimiento.necesitoCambioPastillas()) ? "Alerta":"");
+		alerta_revision.setText((mantenimiento.necesitoRevision()) ? "Alerta":"");
 		
 	}
 	
@@ -256,7 +256,7 @@ public class Interfaz extends JFrame implements ActionListener, Runnable {
 		while(true) {
 			etiquetasMisc();
 			try {
-				Thread.sleep(500);
+				Thread.sleep(100);
 			} catch (Exception e) { }
 		}
 	}

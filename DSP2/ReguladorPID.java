@@ -6,7 +6,10 @@ import java.util.Collections;
 public class ReguladorPID {
 	ArrayList<Double> lista_rpm;
 	double rpm_objetivo;
-	public static int MAX_SIZE = 120;
+	public static int MAX_SIZE = (int) (4*Coche.UPDATES_PER_SECOND);
+	private static double FACTOR_P = Coche.UPDATES_PER_SECOND;
+	private static double FACTOR_D = 0;
+	private static double FACTOR_I = 2.0;
 	
 	ReguladorPID(double objetivo){
 		lista_rpm = new ArrayList<Double>();
@@ -39,7 +42,7 @@ public class ReguladorPID {
 			double elemento_P = (rpm < rpm_objetivo) ? rpm/rpm_objetivo : -rpm_objetivo/rpm;
 
 			//Elemento diferencial, cuanto mas la diferencia entre velocidad actual y anterior, menos se acelera (
-			double elemento_D; 
+			double elemento_D;
 			elemento_D = lista_rpm.get(lista_rpm.size()-1)-rpm;
 			
 			//Elemento integral, acelera o desacelera según el cambio a lo largo del tiempo
@@ -49,7 +52,7 @@ public class ReguladorPID {
 			}
 			elemento_I /= lista_rpm.size();
 			
-			accel = accel_maxima * elemento_P;
+			accel = FACTOR_P * elemento_P + FACTOR_I * (elemento_I/((rpm_objetivo>1)?rpm_objetivo:1)) + FACTOR_D * elemento_D;
 		}
 		
 		return Math.max(-accel_maxima, Math.min(accel_maxima, accel));
