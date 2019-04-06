@@ -25,8 +25,9 @@ public class Monitor {
 	}
 	
 	double calcularRevoluciones() {
+		double conversorHora = 60*1000;
 		double tiempo_actualizacion = 1000/Coche.UPDATES_PER_SECOND;
-		double revs = getVelocidadRPM()/(tiempo_actualizacion);
+		double revs = getVelocidadRPM()/(tiempo_actualizacion*conversorHora);
 		return revs;
 	}
 	

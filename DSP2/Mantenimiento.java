@@ -21,10 +21,18 @@ public class Mantenimiento {
 	}
 	
 	void update(double rpm) {
+		double gasolina_gastada = gastoGasolina(rpm);
+		nivel_gasolina -= gasolina_gastada;
+	}
+
+	double gastoGasolina(double rpm) {
 		double rot = rpm/(60*Coche.UPDATES_PER_SECOND);
 		rotaciones_totales += rot;
-		double gasolina_gastada = rot*rot*5*Math.pow(10, -10) ;//Math.pow(10, 10) = 10 ^(-10)
-		nivel_gasolina -= gasolina_gastada;
+		return rot*rot*5*Math.pow(10, -10) ;//Math.pow(10, 10) = 10 ^(-10)
+	}
+	
+	double gastoGasolinaMedio() {
+		return (MAXGASOLINA - nivel_gasolina)/Coche.UPDATES_PER_SECOND
 	}
 	
 	double getGasolina() {
@@ -37,6 +45,7 @@ public class Mantenimiento {
 	
 	void realizarEngrase() {
 		rotaciones_aceite = rotaciones_totales;
+		nivel_aceite = MAXACEITE;
 	}
 	
 	void realizarCambioPastillas() {
