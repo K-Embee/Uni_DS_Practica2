@@ -20,6 +20,14 @@ public class Mantenimiento {
 		rotaciones_revision = 0;
 	}
 	
+	double getRotaciones() {
+		return rotaciones_totales;
+	}
+	
+	double getDistancia() {
+		return rotaciones_totales*(Math.PI*Coche.RADIO_RUEDA*2)*0.001;
+	}
+	
 	void update(double rpm) {
 		double gasolina_gastada = gastoGasolina(rpm);
 		nivel_gasolina -= gasolina_gastada;
@@ -28,11 +36,11 @@ public class Mantenimiento {
 	double gastoGasolina(double rpm) {
 		double rot = rpm/(60*Coche.UPDATES_PER_SECOND);
 		rotaciones_totales += rot;
-		return rot*rot*5*Math.pow(10, -10) ;//Math.pow(10, 10) = 10 ^(-10)
+		return rot*rot*5*Math.pow(10, -5) ;//Math.pow(10, 10) = 10 ^(-10) //Cambiado a 10^(-5) para que se note por ahora
 	}
 	
 	double gastoGasolinaMedio() {
-		return (MAXGASOLINA - nivel_gasolina)/Coche.UPDATES_PER_SECOND
+		return (MAXGASOLINA - nivel_gasolina)/Coche.UPDATES_PER_SECOND;
 	}
 	
 	double getGasolina() {

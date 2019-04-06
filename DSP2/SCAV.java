@@ -43,6 +43,17 @@ public class SCAV {
 		scav = EstadoSCAV.PARAR;
 	}
 	
+	void frenar() {
+		setPedales(EstadoPedales.FRENANDO);
+		pararSCAV();
+	}
+	
+	void apagarMotor() {
+		setPedales(EstadoPedales.NINGUNO);
+		pararSCAV();
+		setArranque(EstadoArranque.NO_ENCENDIDO);
+	}
+	
 	public EstadoSCAV getSCAV() {
 		return scav;
 	}

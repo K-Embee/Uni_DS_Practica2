@@ -16,7 +16,7 @@ public class Monitor {
 	double calcularDistancia() {
 		double conversorHora = 3600*1000;
 		double tiempo_actualizacion = 1000/Coche.UPDATES_PER_SECOND;
-		double dist = getVelocidadKm()/(tiempo_actualizacion*conversorHora);
+		double dist = getVelocidadKMH()/(tiempo_actualizacion*conversorHora);
 		return dist;
 	}
 	
@@ -35,7 +35,7 @@ public class Monitor {
 		revoluciones += calcularRevoluciones();
 	}
 	
-	double getVelocidadKm() {
+	double getVelocidadKMH() {
 		return velocidad_rpm*(Math.PI*Coche.RADIO_RUEDA*2)*60*0.001;
 	}
 	

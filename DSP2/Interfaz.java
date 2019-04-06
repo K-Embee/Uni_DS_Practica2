@@ -1,19 +1,11 @@
 package DSP2;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Label;
-import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import java.util.ArrayList;
 
-public class Interfaz extends JFrame implements ActionListener {
+public class Interfaz extends JFrame implements ActionListener, Runnable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -25,7 +17,9 @@ public class Interfaz extends JFrame implements ActionListener {
 	private ArrayList<AbstractButton> botones_motor_apagado;
 	
 	//Velocimetro
-	private Label etiqueta;
+	private Label etiqueta_velocidad;
+	private Label etiqueta_gasolina;
+	private Label etiqueta_distancia;
 	
 	//Pedales
 	private JToggleButton boton_accel = null;
@@ -46,13 +40,14 @@ public class Interfaz extends JFrame implements ActionListener {
 	private JButton boton_pastillas = null;
 	private JButton boton_revision = null;
 	
-	//BORRAR DESPUES
-	private JButton aaaa;
-	//FIN
-	
+	private Label alerta_repostar;
+	private Label alerta_aceite;
+	private Label alerta_pastillas;
+	private Label alerta_revision;
+		
 	public Interfaz(SCAV s, Mantenimiento ma, Monitor mo) {
 		setTitle("vroom vroom fast machine");
-		setSize(600,400);
+		setSize(750,250);
 		
 		scav = s;
 		mantenimiento = ma;
@@ -79,8 +74,12 @@ public class Interfaz extends JFrame implements ActionListener {
 		getContentPane().add(panelGrande);
 		
 		//Velocimetro
-		etiqueta = new Label("Actualmente se desconoce la velocidad del coche");
-		panelVelocimetro.add(etiqueta, BorderLayout.NORTH);
+		etiqueta_velocidad = new Label("Actualmente se desconoce la velocidad del coche");
+		etiqueta_gasolina = new Label("Actualmente se desconoce el nivel de combustible");
+		etiqueta_distancia = new Label("Actualmente se desconoce la distancia recorrida");
+		panelVelocimetro.add(etiqueta_velocidad, BorderLayout.NORTH);
+		panelVelocimetro.add(etiqueta_gasolina, BorderLayout.NORTH);
+		panelVelocimetro.add(etiqueta_distancia, BorderLayout.NORTH);
 				
 		//Pedales
 		boton_motor = new JToggleButton("");
@@ -127,19 +126,31 @@ public class Interfaz extends JFrame implements ActionListener {
 		boton_repostar.addActionListener( this );
 		boton_aceite.addActionListener( this );
 		boton_pastillas.addActionListener( this );
-		boton_repostar.addActionListener( this );
+		boton_revision.addActionListener( this );
+		
+		alerta_repostar = new Label("Alerta"); alerta_repostar.setForeground(Color.RED);
+		alerta_aceite = new Label("Alerta"); alerta_aceite.setForeground(Color.RED);
+		alerta_pastillas = new Label("Alerta"); alerta_pastillas.setForeground(Color.RED);
+		alerta_revision = new Label("Alerta"); alerta_revision.setForeground(Color.RED);
 
-		panelMant.add(boton_repostar);
-		panelMant.add(boton_aceite);
-		panelMant.add(boton_pastillas);
-		panelMant.add(boton_revision);
-		
-		//BORRAR DESPUES
-		aaaa = new  JButton("Actualizar velocidad");
-		aaaa.addActionListener( this );
-		panelVelocimetro.add(aaaa);		
-		//FIN
-		
+		Panel mini;
+		mini = new Panel(new BorderLayout());
+		mini.add(alerta_repostar);
+		mini.add(boton_repostar);
+		panelMant.add(mini);
+		mini = new Panel(new BorderLayout());
+		mini.add(alerta_aceite);
+		mini.add(boton_aceite);
+		panelMant.add(mini);
+		mini = new Panel(new BorderLayout());
+		mini.add(alerta_pastillas);
+		mini.add(boton_pastillas);
+		panelMant.add(mini);
+		mini = new Panel(new BorderLayout());
+		mini.add(alerta_revision);
+		mini.add(boton_revision);
+		panelMant.add(mini);
+				
 		//Estetica y funcionalidad
 		botones_motor_encendido = new ArrayList<AbstractButton>();
 		botones_motor_encendido.add(scav_acelerar);
@@ -157,9 +168,12 @@ public class Interfaz extends JFrame implements ActionListener {
 		
 		etiquetasMotor();
 		etiquetasPedalesSCAV();
+		etiquetasMisc();
 		this.setVisible(true);
 		
 		this.addWindowListener (new WindowAdapter(){public void windowClosing(WindowEvent e){System.exit(0);}});
+		
+		new Thread(this).start();
 	}
 	
 	private void etiquetasMotor() {
@@ -185,6 +199,19 @@ public class Interfaz extends JFrame implements ActionListener {
 				a.setEnabled(true);
 			}
 		}
+	}
+	
+	private void etiquetasMisc() {
+		etiqueta_velocidad.setText("Velocidad: " + String.format("%.2f", monitor.getVelocidadKMH()) + " km/h ("
+			+ String.format("%.2f", monitor.getVelocidadRPM()) + " rpm)");
+		etiqueta_gasolina.setText("Combustible: " + String.format("%.2f", mantenimiento.getGasolina()) + " litros");
+		etiqueta_distancia.setText("Distancia Recorrida:" + String.format("%.2f", mantenimiento.getDistancia()) + " km ("
+				+ String.format("%.2f", mantenimiento.getRotaciones()) + " revoluciones)");
+		
+		alerta_aceite.setVisible(mantenimiento.necesitoEngrase());
+		alerta_pastillas.setVisible(mantenimiento.necesitoCambioPastillas());
+		alerta_revision.setVisible(mantenimiento.necesitoRevision());
+		
 	}
 	
 	private void etiquetasPedalesSCAV() {
@@ -218,31 +245,30 @@ public class Interfaz extends JFrame implements ActionListener {
 				break;
 		}
 	}
+	
+	@Override
+	public void run() {
+		while(true) {
+			etiquetasMisc();
+			try {
+				Thread.sleep(500);
+			} catch (Exception e) { }
+		}
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		
-		//BORRAR DESPUES
-		if(event.getSource() == aaaa) {
-			etiqueta.setText("Velocidad: " + Double.toString(monitor.getVelocidadKm()) + " km/h");
-			return;
-		}
-		//FIN
-		
+				
 		if (event.getSource() == boton_motor) {
 			if(!boton_motor.isSelected()) {
-				scav.setPedales(EstadoPedales.NINGUNO);
-				scav.pararSCAV();
-				scav.setArranque(EstadoArranque.NO_ENCENDIDO);
+				scav.apagarMotor();
 			}
 			else {
 				scav.setArranque(EstadoArranque.ENCENDIDO);
 			}
-			etiquetasMotor();
-			return;
 		}
 
-		if(boton_motor.isSelected()) {
+		else if(boton_motor.isSelected()) {
 			if (event.getSource() == boton_accel) {
 				if(boton_accel.isSelected()) {
 					scav.setPedales(EstadoPedales.ACELERANDO);
@@ -255,7 +281,7 @@ public class Interfaz extends JFrame implements ActionListener {
 			}
 			else if (event.getSource() == boton_decel) {
 				if(boton_decel.isSelected()) {
-					scav.setPedales(EstadoPedales.FRENANDO);
+					scav.frenar();
 					boton_accel.setEnabled(false);
 				}
 				else {
@@ -277,6 +303,7 @@ public class Interfaz extends JFrame implements ActionListener {
 			}
 		}
 		
+		etiquetasMotor();
 		etiquetasPedalesSCAV();
 	}
 }
