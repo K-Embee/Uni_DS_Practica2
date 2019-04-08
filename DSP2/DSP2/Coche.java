@@ -30,10 +30,8 @@ public class Coche implements Runnable{
 	public void run() {
 		while(true) {
 			
-			//TODO -- Obtener información del mantenimiento si no se ha arrancado
 			
-			
-			//
+			//Lógica del SCAV
 			EstadoSCAV estado_scav = scav.getSCAV();
 			
 			if(estado_scav == EstadoSCAV.MANTENER && actualizar_velocidad_guardada) {
@@ -45,10 +43,10 @@ public class Coche implements Runnable{
 				actualizar_velocidad_guardada = true;
 			}
 			
-			//TODO -- Llamar al gestor de filtros con la velocidad actual y el estado del SCAV
+			//Llamar al gestor de filtros con la velocidad actual y el estado del SCAV
 			velocidad_rpm = filtros.update(velocidad_rpm, regulador, scav.getPedales(), estado_scav);
 			
-			//TODO -- Actualizar al monitor con la información relevante
+			//Actualizar al monitor con la información relevante
 			monitor.update(velocidad_rpm, velocidad_guardada);
 			
 			mantenimiento.update(velocidad_rpm);
