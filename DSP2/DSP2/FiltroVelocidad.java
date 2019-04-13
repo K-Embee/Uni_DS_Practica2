@@ -13,8 +13,6 @@ public class FiltroVelocidad implements Filtro {
 			rpm += regulador.update(rpm);
 		}
 		
-		regulador.actualiziarArrays(rpm);
-		
 		return rpm;
 	}
 
